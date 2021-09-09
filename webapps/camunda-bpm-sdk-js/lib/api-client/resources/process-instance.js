@@ -227,7 +227,7 @@ var ProcessInstance = AbstractClientResource.extend(
     /**
      * Correlates a message against process instances (batch).
      *
-     * @see https://docs.camunda.org/manual/develop/reference/rest/process-instance/post-message-async/
+     * @see https://docs.camunda.org/manual/develop/reference/rest/process-instance/post-correlate-message-async/
      *
      * @param   {Object}            payload
      * @param   {requestCallback}   done
