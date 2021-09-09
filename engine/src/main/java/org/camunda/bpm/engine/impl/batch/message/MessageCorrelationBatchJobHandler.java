@@ -88,7 +88,7 @@ public class MessageCorrelationBatchJobHandler extends AbstractBatchJobHandler<M
     setVariables(batchId, correlationBuilder, commandContext);
     for (String id : batchConfiguration.getIds()) {
       correlationBuilder.processInstanceId(id);
-      commandContext.runWithoutAuthorization(new CorrelateAllMessageCmd(correlationBuilder, false, false));
+      commandContext.executeWithOperationLogPrevented(new CorrelateAllMessageCmd(correlationBuilder, false, false));
     }
 
     commandContext.getByteArrayManager().delete(configurationEntity);

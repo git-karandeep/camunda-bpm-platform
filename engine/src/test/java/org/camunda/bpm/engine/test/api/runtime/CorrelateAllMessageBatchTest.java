@@ -336,6 +336,50 @@ public class CorrelateAllMessageBatchTest {
   }
 
   @Test
+  public void shouldThrowException_NullProcessInstanceIds() {
+    // when/then
+    assertThatThrownBy(() ->
+      runtimeService.createMessageCorrelationAsync(MESSAGE_ONE_REF)
+        .processInstanceIds(null)
+        .correlateAllAsync())
+      .isInstanceOf(NullValueException.class)
+      .hasMessageContaining("processInstanceIds");
+  }
+
+  @Test
+  public void shouldThrowException_NullProcessInstanceQuery() {
+    // when/then
+    assertThatThrownBy(() ->
+      runtimeService.createMessageCorrelationAsync(MESSAGE_ONE_REF)
+        .processInstanceQuery(null)
+        .correlateAllAsync())
+      .isInstanceOf(NullValueException.class)
+      .hasMessageContaining("processInstanceQuery");
+  }
+
+  @Test
+  public void shouldThrowException_NullHistoricProcessInstanceQuery() {
+    // when/then
+    assertThatThrownBy(() ->
+      runtimeService.createMessageCorrelationAsync(MESSAGE_ONE_REF)
+        .historicProcessInstanceQuery(null)
+        .correlateAllAsync())
+      .isInstanceOf(NullValueException.class)
+      .hasMessageContaining("historicProcessInstanceQuery");
+  }
+
+  @Test
+  public void shouldThrowException_NullVariableName() {
+    // when/then
+    assertThatThrownBy(() ->
+      runtimeService.createMessageCorrelationAsync(MESSAGE_ONE_REF)
+        .setVariable(null, "bar")
+        .correlateAllAsync())
+      .isInstanceOf(NullValueException.class)
+      .hasMessageContaining("variableName");
+  }
+
+  @Test
   public void shouldCreateDeploymentAwareBatchJobs_ByIds() {
     // given
     engineRule.getProcessEngineConfiguration().setInvocationsPerBatchJob(2);

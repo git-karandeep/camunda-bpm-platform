@@ -24,8 +24,6 @@ import java.util.Map;
 import org.camunda.bpm.engine.batch.Batch;
 import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
 import org.camunda.bpm.engine.impl.cmd.batch.CorrelateAllMessageBatchCmd;
-import org.camunda.bpm.engine.impl.interceptor.Command;
-import org.camunda.bpm.engine.impl.interceptor.CommandContext;
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor;
 import org.camunda.bpm.engine.runtime.MessageCorrelationAsyncBuilder;
 import org.camunda.bpm.engine.runtime.ProcessInstanceQuery;
@@ -34,7 +32,6 @@ import org.camunda.bpm.engine.variable.impl.VariableMapImpl;
 public class MessageCorrelationAsyncBuilderImpl implements MessageCorrelationAsyncBuilder {
 
   protected CommandExecutor commandExecutor;
-  protected CommandContext commandContext;
 
   protected String messageName;
   protected Map<String, Object> payloadProcessInstanceVariables;
@@ -49,18 +46,12 @@ public class MessageCorrelationAsyncBuilderImpl implements MessageCorrelationAsy
     this.commandExecutor = commandExecutor;
   }
 
-  public MessageCorrelationAsyncBuilderImpl(CommandContext commandContext, String messageName) {
-    this(messageName);
-    ensureNotNull("commandContext", commandContext);
-    this.commandContext = commandContext;
-  }
-
   private MessageCorrelationAsyncBuilderImpl(String messageName) {
     this.messageName = messageName;
   }
 
   public MessageCorrelationAsyncBuilder processInstanceIds(List<String> ids) {
-    ensureNotNull("processInstanceId", ids);
+    ensureNotNull("processInstanceIds", ids);
     this.processInstanceIds = ids;
     return this;
   }
@@ -102,25 +93,13 @@ public class MessageCorrelationAsyncBuilderImpl implements MessageCorrelationAsy
 
   @Override
   public Batch correlateAllAsync() {
-    return execute(new CorrelateAllMessageBatchCmd(this));
-  }
-
-  protected <T> T execute(Command<T> command) {
-    if(commandExecutor != null) {
-      return commandExecutor.execute(command);
-    } else {
-      return command.execute(commandContext);
-    }
+    return commandExecutor.execute(new CorrelateAllMessageBatchCmd(this));
   }
 
   // getters //////////////////////////////////
 
   public CommandExecutor getCommandExecutor() {
     return commandExecutor;
-  }
-
-  public CommandContext getCommandContext() {
-    return commandContext;
   }
 
   public String getMessageName() {
