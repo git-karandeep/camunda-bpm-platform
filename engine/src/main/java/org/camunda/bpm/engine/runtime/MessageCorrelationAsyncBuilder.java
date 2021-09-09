@@ -45,6 +45,8 @@ public interface MessageCorrelationAsyncBuilder {
    *          {@link #historicProcessInstanceQuery(HistoricProcessInstanceQuery)}
    *          has to be set.
    * @return the builder
+   * @throws NullValueException
+   *           when <code>ids</code> is <code>null</code>
    */
   MessageCorrelationAsyncBuilder processInstanceIds(List<String> ids);
 
@@ -61,6 +63,8 @@ public interface MessageCorrelationAsyncBuilder {
    *          {@link #historicProcessInstanceQuery(HistoricProcessInstanceQuery)}
    *          has to be set.
    * @return the builder
+   * @throws NullValueException
+   *           when <code>processInstanceQuery</code> is <code>null</code>
    */
   MessageCorrelationAsyncBuilder processInstanceQuery(ProcessInstanceQuery processInstanceQuery);
 
@@ -77,6 +81,8 @@ public interface MessageCorrelationAsyncBuilder {
    *          {@link #historicProcessInstanceQuery(HistoricProcessInstanceQuery)}
    *          has to be set.
    * @return the builder
+   * @throws NullValueException
+   *           when <code>historicProcessInstanceQuery</code> is <code>null</code>
    */
   MessageCorrelationAsyncBuilder historicProcessInstanceQuery(HistoricProcessInstanceQuery historicProcessInstanceQuery);
 
@@ -95,6 +101,8 @@ public interface MessageCorrelationAsyncBuilder {
    * @param variableValue
    *          the value of the variable to set
    * @return the builder
+   * @throws NullValueException
+   *           when <code>variableName</code> is <code>null</code>
    */
   MessageCorrelationAsyncBuilder setVariable(String variableName, Object variableValue);
 
