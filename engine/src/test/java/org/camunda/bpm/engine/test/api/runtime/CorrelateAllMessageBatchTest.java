@@ -30,6 +30,7 @@ import org.camunda.bpm.engine.BadUserRequestException;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.camunda.bpm.engine.ProcessEngineException;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.batch.Batch;
 import org.camunda.bpm.engine.exception.NullValueException;
@@ -46,6 +47,7 @@ import org.camunda.bpm.engine.test.RequiredHistoryLevel;
 import org.camunda.bpm.engine.test.util.BatchRule;
 import org.camunda.bpm.engine.test.util.ProcessEngineTestRule;
 import org.camunda.bpm.engine.test.util.ProvidedProcessEngineRule;
+import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.junit.After;
@@ -377,6 +379,28 @@ public class CorrelateAllMessageBatchTest {
         .correlateAllAsync())
       .isInstanceOf(NullValueException.class)
       .hasMessageContaining("variableName");
+  }
+
+  @Test
+  public void shouldThrowException_JavaSerializationForbidden() {
+    // given
+    runtimeService.startProcessInstanceByKey(PROCESS_ONE_KEY);
+    ProcessInstanceQuery runtimeQuery = runtimeService.createProcessInstanceQuery();
+
+    // when/then
+    assertThatThrownBy(() ->
+      runtimeService.createMessageCorrelationAsync(MESSAGE_ONE_REF)
+        .processInstanceQuery(runtimeQuery)
+        .setVariables(
+            Variables.putValue("foo",
+                Variables.serializedObjectValue()
+                 .serializedValue("foo")
+                 .serializationDataFormat(Variables.SerializationDataFormats.JAVA)
+                 .create()))
+        .correlateAllAsync())
+      .isInstanceOf(ProcessEngineException.class)
+      .hasMessageContaining("ENGINE-17007 Cannot set variable with name foo. " +
+          "Java serialization format is prohibited");
   }
 
   @Test
