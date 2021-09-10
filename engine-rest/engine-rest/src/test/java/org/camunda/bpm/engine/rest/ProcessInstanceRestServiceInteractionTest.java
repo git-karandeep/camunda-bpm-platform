@@ -3930,7 +3930,7 @@ public class ProcessInstanceRestServiceInteractionTest extends
   }
 
   @Test
-  public void shouldTransformProcessEngineExceptionToInvalidRequestExceptionWhenCorrelateMessageAsync() {
+  public void shouldNotTransformProcessEngineExceptionToInvalidRequestExceptionWhenCorrelateMessageAsync() {
     // given
     doThrow(new ProcessEngineException("message")).when(runtimeServiceMock).createMessageCorrelationAsync(any());
 
@@ -3939,8 +3939,8 @@ public class ProcessInstanceRestServiceInteractionTest extends
       .contentType(ContentType.JSON)
       .body("{}")
     .then().expect()
-      .statusCode(Status.BAD_REQUEST.getStatusCode())
-      .body(containsString("{\"type\":\"InvalidRequestException\"," +
+      .statusCode(Status.INTERNAL_SERVER_ERROR.getStatusCode())
+      .body(containsString("{\"type\":\"ProcessEngineException\"," +
           "\"message\":\"message\"}"))
     .when()
       .post(PROCESS_INSTANCE_CORRELATE_MESSAGE_ASYNC_URL);

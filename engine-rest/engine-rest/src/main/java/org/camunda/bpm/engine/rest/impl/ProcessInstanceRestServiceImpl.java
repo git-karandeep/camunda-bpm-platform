@@ -311,9 +311,7 @@ public class ProcessInstanceRestServiceImpl extends AbstractRestProcessEngineAwa
         messageCorrelationBuilder.historicProcessInstanceQuery(historyQuery);
       }
       batch = messageCorrelationBuilder.correlateAllAsync();
-    } catch (BadUserRequestException | AuthorizationException e) {
-      throw e;
-    } catch (ProcessEngineException e) {
+    } catch (NullValueException e) {
       // null values are given
       throw new InvalidRequestException(Status.BAD_REQUEST, e.getMessage());
     }
